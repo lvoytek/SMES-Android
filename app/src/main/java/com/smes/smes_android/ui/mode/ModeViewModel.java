@@ -12,7 +12,7 @@ public class ModeViewModel extends ViewModel
 	public ModeViewModel()
 	{
 		mText = new MutableLiveData<>();
-		mText.setValue("This is notifications fragment");
+		mText.setValue("This is mode fragment");
 	}
 
 	public LiveData<String> getText()

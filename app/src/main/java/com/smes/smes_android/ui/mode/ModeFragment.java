@@ -16,13 +16,13 @@ import com.smes.smes_android.R;
 public class ModeFragment extends Fragment
 {
 
-	private com.smes.smes_android.ui.mode.DataViewModel modeViewModel;
+	private com.smes.smes_android.ui.mode.ModeViewModel modeViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
 		modeViewModel =
-				ViewModelProviders.of(this).get(com.smes.smes_android.ui.mode.DataViewModel.class);
+				ViewModelProviders.of(this).get(com.smes.smes_android.ui.mode.ModeViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_mode, container, false);
 		final TextView textView = root.findViewById(R.id.text_notifications);
 		modeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()

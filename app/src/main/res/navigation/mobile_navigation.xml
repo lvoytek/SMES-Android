@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/navigation_data"
+        android:name="com.smes.smes_android.ui.data.DataFragment"
+        android:label="@string/title_data"
+        tools:layout="@layout/fragment_data" />
+
+    <fragment
         android:id="@+id/navigation_mode"
         android:name="com.smes.smes_android.ui.mode.ModeFragment"
         android:label="@string/title_mode"
