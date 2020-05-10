@@ -1,0 +1,3 @@
+[submodule "tinkerboard-android-gpio"]
+	path = tinkerboard-android-gpio
+	url = https://github.com/lvoytek/tinkerboard-android-gpio
