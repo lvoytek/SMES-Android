@@ -1,2 +1,3 @@
 rootProject.name='SMES-android'
-include ':app'
+include ':app', ':tinkerboard-gpio'
+project(':tinkerboard-gpio').projectDir = new File('tinkerboard-android-gpio')
