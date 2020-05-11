@@ -23,8 +23,6 @@ public class SensorsFragment extends Fragment
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		pin185 = new GPIOPin(185);
-		pin185.setDirection(true);
 
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_sensors, container, false);
@@ -37,6 +35,10 @@ public class SensorsFragment extends Fragment
 				textView.setText(s);
 			}
 		});
+
+		//textView.setText(GPIOPin.testRoot());
+		pin185 = new GPIOPin(185);
+		//pin185.setDirection(true);
 
 		Button button = (Button) root.findViewById(R.id.off_button);
 		button.setOnClickListener(new View.OnClickListener() {
