@@ -22,10 +22,97 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.833" />
 
+    <Button
+        android:id="@+id/new_mode_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="60dp"
+        android:text="New"
+        app:layout_constraintStart_toEndOf="@+id/mode_list"
+        app:layout_constraintTop_toBottomOf="@+id/new_mode_card" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mode_list"
         android:layout_width="173dp"
         android:layout_height="224dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/new_mode_card"
+        android:layout_width="757dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="202dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/new_mode_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Mode Name" />
+
+            <EditText
+                android:id="@+id/new_mode_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Description" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Switch
+                    android:id="@+id/is_mode_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Can Create Modes" />
+
+                <Switch
+                    android:id="@+id/is_sensor_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Can Create Sensors" />
+
+                <Switch
+                    android:id="@+id/is_data_create"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Can Create Data" />
+
+                <Switch
+                    android:id="@+id/is_read_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Is Read Only" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/create_mode_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 </android.support.constraint.ConstraintLayout>

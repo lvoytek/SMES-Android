@@ -9,6 +9,7 @@ import com.smes.tinkerboard_gpio.sensors.Sensor;
 public class Mode implements Serializable
 {
 	protected String name;
+	protected String subtext;
 	protected HashMap<String, Sensor> availableSensors;
 	protected HashMap<String, SecureData> availableData;
 
@@ -17,9 +18,10 @@ public class Mode implements Serializable
 	protected boolean canAddData;
 	protected boolean readOnly;
 
-	public Mode(String name, boolean canCreateModes, boolean canAddSensors, boolean canAddData, boolean readOnly)
+	public Mode(String name, String subtext, boolean canCreateModes, boolean canAddSensors, boolean canAddData, boolean readOnly)
 	{
 		this.name = name;
+		this.subtext = subtext;
 		this.availableSensors = new HashMap<>();
 		this.availableData = new HashMap<>();
 		this.canCreateModes = canCreateModes;
@@ -28,9 +30,9 @@ public class Mode implements Serializable
 		this.readOnly = readOnly;
 	}
 
-	public Mode(String name)
+	public Mode(String name, String subtext)
 	{
-		this(name, false, false, false, true);
+		this(name, subtext, false, false, false, true);
 	}
 
 
@@ -111,5 +113,10 @@ public class Mode implements Serializable
 	public String toString()
 	{
 		return this.name;
+	}
+
+	public String getSubtext()
+	{
+		return this.subtext;
 	}
 }
