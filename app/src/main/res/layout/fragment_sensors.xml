@@ -20,7 +20,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/new_item_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="388dp"
+        android:layout_marginEnd="36dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tableRow"
+        app:srcCompat="@drawable/ic_plus" />
+
     <TableRow
+        android:id="@+id/tableRow"
         android:layout_width="964dp"
         android:layout_height="256dp"
         tools:layout_editor_absoluteX="-2dp"
@@ -29,13 +42,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sensor_list"
             android:layout_width="241dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
 
-        <Button
-            android:id="@+id/add_sensor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add" />
+        </android.support.v7.widget.RecyclerView>
 
         <Button
             android:id="@+id/on_button"
@@ -56,5 +65,74 @@
             android:text="Test Root" />
 
     </TableRow>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/new_sensor_card"
+        android:layout_width="727dp"
+        android:layout_height="234dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/new_item_button"
+        app:layout_constraintEnd_toEndOf="@+id/tableRow"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="729dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:layout_width="303dp"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/new_sensor_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="Sensor Name" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Spinner
+                        android:id="@+id/sensor_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/add_sensor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </TableLayout>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="412dp"
+                android:layout_height="228dp"
+                android:src="@drawable/asus_tinkerboard_pinout" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

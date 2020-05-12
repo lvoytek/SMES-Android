@@ -4,4 +4,11 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_data">Data</string>
     <string name="title_mode">Mode</string>
+
+    <string-array name="sensors_array">
+        <item>KeyPad</item>
+        <item>Pressure Sensor</item>
+        <item>Pulse Oximeter</item>
+    </string-array>
+
 </resources>
