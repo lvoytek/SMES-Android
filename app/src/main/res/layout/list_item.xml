@@ -20,14 +20,14 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor name"
+                android:text="Item name"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/sensorType"
+                android:id="@+id/subtext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sensor Type"
+                android:text="Item subtext"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>

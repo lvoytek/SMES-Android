@@ -1,3 +1,5 @@
 rootProject.name='SMES-android'
 include ':app', ':tinkerboard-gpio'
 project(':tinkerboard-gpio').projectDir = new File('tinkerboard-android-gpio')
+include ':SMES-mode'
+include ':SMES-Data'

@@ -1,6 +1,5 @@
 package com.smes.smes_android.ui.sensors;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 		{
 			super(itemView);
 			this.name = (TextView) itemView.findViewById(R.id.name);
-			this.sensorType = (TextView) itemView.findViewById(R.id.sensorType);
+			this.sensorType = (TextView) itemView.findViewById(R.id.subtext);
 		}
 	}
 
@@ -42,7 +41,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 	@Override
 	public SensorViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sensor_item, null);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
 		return new SensorViewHolder(view);
 	}
 

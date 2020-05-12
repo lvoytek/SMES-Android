@@ -42,15 +42,6 @@ public class SensorsFragment extends Fragment
 		sensors = new ArrayList<Sensor>();
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_sensors, container, false);
-		final TextView textView = root.findViewById(R.id.text_sensors);
-		sensorsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
-		{
-			@Override
-			public void onChanged(@Nullable String s)
-			{
-				textView.setText(s);
-			}
-		});
 
 		pin185 = new GPIOPin(185);
 		pin185.setDirection(true);
@@ -88,7 +79,7 @@ public class SensorsFragment extends Fragment
 		button = (Button) root.findViewById(R.id.test_root_button);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				textView.setText("" + pad.getInput());
+
 			}
 		});
 
@@ -104,10 +95,10 @@ public class SensorsFragment extends Fragment
 				switch((String) parent.getItemAtPosition(position))
 				{
 					case "KeyPad":
-						textView.setText("Keypad");
+
 						break;
 					default:
-						textView.setText("Nothing");
+
 
 				}
 			}
