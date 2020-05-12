@@ -1,11 +1,12 @@
 package com.example.smes_mode;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import com.example.smes_data.SecureData;
 import com.smes.tinkerboard_gpio.sensors.Sensor;
 
-public class Mode
+public class Mode implements Serializable
 {
 	protected String name;
 	protected HashMap<String, Sensor> availableSensors;

@@ -18,7 +18,7 @@ import com.smes.smes_android.ui.mode.ModeFragment;
 import com.smes.smes_android.ui.sensors.SensorsFragment;
 
 
-public class MainActivity extends AppCompatActivity implements ModeFragment.CurrentModeSender
+public class MainActivity extends AppCompatActivity
 {
 	SensorsFragment sensorsFrag;
 	DashboardFragment dashboardFragment;
@@ -38,14 +38,5 @@ public class MainActivity extends AppCompatActivity implements ModeFragment.Curr
 		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
 	}
-
-	@Override
-	public void sendMode(Mode mode)
-	{
-		if (sensorsFrag != null)
-			sensorsFrag.updateCurrentMode(mode);
-
-		if (dashboardFragment != null)
-			dashboardFragment.updateCurrentMode(mode);
-	}
+	
 }

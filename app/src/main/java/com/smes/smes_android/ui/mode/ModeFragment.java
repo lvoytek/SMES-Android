@@ -12,9 +12,12 @@ import android.support.v4.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
+import com.example.smes_data.SecureData;
 import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ModeFragment extends Fragment
@@ -23,8 +26,7 @@ public class ModeFragment extends Fragment
 	private com.smes.smes_android.ui.mode.ModeViewModel modeViewModel;
 	private Mode currentMode;
 	private ArrayList<Mode> modes;
-
-	CurrentModeSender modeSendCallback;
+	private SecureData currentModeFile;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
@@ -47,40 +49,26 @@ public class ModeFragment extends Fragment
 		currentMode = new Mode("root", true, true, true, false);
 		modes.add(currentMode);
 
-		this.sendCurrentMode();
+		try
+		{
+			File externalDir = getContext().getExternalFilesDir(null);
+			currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+			currentModeFile.writeData(this.currentMode);
+		}
+		catch (NullPointerException | IOException e){}
 
 		return root;
 	}
 
-	public interface CurrentModeSender
-	{
-		public void sendMode(Mode mode);
-	}
 
-	@Override
-	public void onAttach(Activity activity)
+	public void saveCurrentMode()
 	{
-		super.onAttach(activity);
-
 		try
 		{
-			modeSendCallback = (CurrentModeSender) activity;
+			this.currentModeFile.writeData(this.currentMode);
 		}
-		catch(ClassCastException e)
-		{
-
-		}
+		catch (IOException e){}
 	}
 
-	public void sendCurrentMode()
-	{
-		modeSendCallback.sendMode(this.currentMode);
-	}
 
-	@Override
-	public void onDetach()
-	{
-		modeSendCallback = null;
-		super.onDetach();
-	}
 }
