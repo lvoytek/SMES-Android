@@ -2,6 +2,7 @@ package com.smes.smes_android;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,9 +12,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.smes_mode.Mode;
+import com.smes.smes_android.ui.dashboard.DashboardFragment;
+import com.smes.smes_android.ui.mode.ModeFragment;
+import com.smes.smes_android.ui.sensors.SensorsFragment;
 
-public class MainActivity extends AppCompatActivity
+
+public class MainActivity extends AppCompatActivity implements ModeFragment.CurrentModeSender
 {
+	SensorsFragment sensorsFrag;
+	DashboardFragment dashboardFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -28,5 +37,15 @@ public class MainActivity extends AppCompatActivity
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
+	}
+
+	@Override
+	public void sendMode(Mode mode)
+	{
+		if (sensorsFrag != null)
+			sensorsFrag.updateCurrentMode(mode);
+
+		if (dashboardFragment != null)
+			dashboardFragment.updateCurrentMode(mode);
 	}
 }

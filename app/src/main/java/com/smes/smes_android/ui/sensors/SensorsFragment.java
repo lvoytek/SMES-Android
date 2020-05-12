@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
+import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
 import com.smes.tinkerboard_gpio.GPIOPin;
 import com.smes.tinkerboard_gpio.sensors.KeyPad;
@@ -36,6 +37,8 @@ public class SensorsFragment extends Fragment
 	private KeyPad pad;
 	private PressureSensor press;
 	private ArrayList<Sensor> sensors;
+
+	private Mode currentMode;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -147,5 +150,10 @@ public class SensorsFragment extends Fragment
 		});
 
 		return root;
+	}
+
+	public void updateCurrentMode(Mode mode)
+	{
+		this.currentMode = mode;
 	}
 }

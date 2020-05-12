@@ -1,5 +1,6 @@
 package com.smes.smes_android.ui.mode;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ public class ModeFragment extends Fragment
 	private Mode currentMode;
 	private ArrayList<Mode> modes;
 
+	CurrentModeSender modeSendCallback;
+
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
 	{
@@ -44,6 +47,40 @@ public class ModeFragment extends Fragment
 		currentMode = new Mode("root", true, true, true, false);
 		modes.add(currentMode);
 
+		this.sendCurrentMode();
+
 		return root;
+	}
+
+	public interface CurrentModeSender
+	{
+		public void sendMode(Mode mode);
+	}
+
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+
+		try
+		{
+			modeSendCallback = (CurrentModeSender) activity;
+		}
+		catch(ClassCastException e)
+		{
+
+		}
+	}
+
+	public void sendCurrentMode()
+	{
+		modeSendCallback.sendMode(this.currentMode);
+	}
+
+	@Override
+	public void onDetach()
+	{
+		modeSendCallback = null;
+		super.onDetach();
 	}
 }
