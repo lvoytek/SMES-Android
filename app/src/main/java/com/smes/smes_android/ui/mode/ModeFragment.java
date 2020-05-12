@@ -11,12 +11,17 @@ import android.support.v4.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
+import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
+
+import java.util.ArrayList;
 
 public class ModeFragment extends Fragment
 {
 
 	private com.smes.smes_android.ui.mode.ModeViewModel modeViewModel;
+	private Mode currentMode;
+	private ArrayList<Mode> modes;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
@@ -33,6 +38,12 @@ public class ModeFragment extends Fragment
 				textView.setText(s);
 			}
 		});
+
+
+		modes = new ArrayList<>();
+		currentMode = new Mode("root", true, true, true, false);
+		modes.add(currentMode);
+
 		return root;
 	}
 }

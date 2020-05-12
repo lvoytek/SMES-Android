@@ -39,6 +39,7 @@ public class SensorsFragment extends Fragment
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
+
 		sensors = new ArrayList<Sensor>();
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_sensors, container, false);
