@@ -65,4 +65,5 @@ public class SecureData
 		return this.name;
 	}
 
+	public String getFileName() { return this.fileName; }
 }
