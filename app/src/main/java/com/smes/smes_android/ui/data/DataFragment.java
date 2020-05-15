@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +46,12 @@ public class DataFragment extends Fragment
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
-			dataListFile = new SecureData("Data List", "all_datas.txt", externalDir);
+			dataListFile = new SecureData("Data List", "all_data.txt", externalDir);
 			this.datas = (ArrayList<SecureData>) dataListFile.readObjectData();
 
 		} catch (IOException e)
 		{
+			dataListFile = null;
 			datas = new ArrayList<>();
 		} catch (ClassNotFoundException e) {}
 
@@ -148,7 +150,7 @@ public class DataFragment extends Fragment
 						{
 							File externalDir = getContext().getExternalFilesDir(null);
 							if(dataListFile == null)
-								dataListFile = new SecureData("Data List", "all_datas.txt", externalDir);
+								dataListFile = new SecureData("Data List", "all_data.txt", externalDir);
 							dataListFile.writeData(datas);
 						} catch (IOException e){}
 					}

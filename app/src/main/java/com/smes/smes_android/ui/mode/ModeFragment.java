@@ -53,6 +53,7 @@ public class ModeFragment extends Fragment
 		}
 		catch (NullPointerException | IOException | ClassNotFoundException e)
 		{
+			currentModeFile = null;
 			currentMode = new Mode("root", "Full Access", true, true, true, false);
 		}
 
