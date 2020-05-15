@@ -22,6 +22,7 @@ import com.smes.smes_android.R;
 import com.smes.tinkerboard_gpio.GPIOPin;
 import com.smes.tinkerboard_gpio.sensors.KeyPad;
 import com.smes.tinkerboard_gpio.sensors.ButtonSensor;
+import com.smes.tinkerboard_gpio.sensors.PulseOximeter;
 import com.smes.tinkerboard_gpio.sensors.Sensor;
 
 import java.util.ArrayList;
@@ -116,6 +117,9 @@ public class SensorsFragment extends Fragment
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 			{
+				for(int i = 0; i < 8; i++)
+					gpioSpinners[i].setBackgroundColor(getResources().getColor(R.color.clear));
+
 				switch((String) parent.getItemAtPosition(position))
 				{
 					case "KeyPad":
@@ -205,9 +209,8 @@ public class SensorsFragment extends Fragment
 
 					case "Button":
 						if (gpioSpinners[0].getSelectedItemPosition() > 0)
-						{
-							sensors.add(new ButtonSensor(sensorName.getText().toString(), 1));
-						}
+							sensors.add(new ButtonSensor(sensorName.getText().toString(),
+									Integer.parseInt((String) gpioSpinners[0].getSelectedItem())));
 						else
 						{
 							sensorAdded = false;
@@ -224,7 +227,10 @@ public class SensorsFragment extends Fragment
 								sensorAdded = false;
 							}
 						}
-						//if(sensorAdded)
+						if(sensorAdded)
+							sensors.add(new PulseOximeter(sensorName.getText().toString(),
+									Integer.parseInt((String) gpioSpinners[0].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[1].getSelectedItem())));
 
 						break;
 					default:
