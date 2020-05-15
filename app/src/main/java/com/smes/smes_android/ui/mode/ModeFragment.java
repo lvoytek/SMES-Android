@@ -3,6 +3,7 @@ package com.smes.smes_android.ui.mode;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,16 +43,7 @@ public class ModeFragment extends Fragment
 	{
 		modeViewModel =
 				ViewModelProviders.of(this).get(com.smes.smes_android.ui.mode.ModeViewModel.class);
-		View root = inflater.inflate(R.layout.fragment_mode, container, false);
-		final TextView textView = root.findViewById(R.id.text_notifications);
-		modeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>()
-		{
-			@Override
-			public void onChanged(@Nullable String s)
-			{
-				textView.setText(s);
-			}
-		});
+		final View root = inflater.inflate(R.layout.fragment_mode, container, false);
 
 		try
 		{
@@ -121,7 +113,14 @@ public class ModeFragment extends Fragment
 		final CardView newModeCard = (CardView) root.findViewById(R.id.new_mode_card);
 		fb.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				newModeCard.setVisibility(View.VISIBLE);
+				if(currentMode.creatingModesOK())
+					newModeCard.setVisibility(View.VISIBLE);
+				else
+				{
+					Snackbar.make(root, "Mode " + currentMode.toString() + " does not have mode creation privileges", Snackbar.LENGTH_LONG)
+							.setAction("Action", null).show();
+				}
+
 			}
 		});
 

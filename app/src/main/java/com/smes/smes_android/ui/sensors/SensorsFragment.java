@@ -36,7 +36,6 @@ public class SensorsFragment extends Fragment
 {
 
 	private SensorsViewModel sensorsViewModel;
-	private GPIOPin pin185;
 	private KeyPad pad;
 	private ButtonSensor press;
 	private ArrayList<Sensor> sensors;
@@ -51,28 +50,11 @@ public class SensorsFragment extends Fragment
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
 		final View root = inflater.inflate(R.layout.fragment_sensors, container, false);
 
-		pin185 = new GPIOPin(185);
-		pin185.setDirection(true);
 		pad = new KeyPad("KP", 251, 255, 171, 163, 162, 184, 160, 161);
 		sensors.add(pad);
 
 		press = new ButtonSensor("PS", 188);
 		sensors.add(press);
-
-
-		Button button = (Button) root.findViewById(R.id.off_button);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				pin185.setOutput(false);
-			}
-		});
-
-		button = (Button) root.findViewById(R.id.on_button);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				pin185.setOutput(true);
-			}
-		});
 
 		FloatingActionButton floatButton = (FloatingActionButton) root.findViewById(R.id.new_item_button);
 		final CardView newSensorCard = ((CardView) root.findViewById(R.id.item_card));
@@ -88,14 +70,6 @@ public class SensorsFragment extends Fragment
 			}
 		});
 
-
-
-		button = (Button) root.findViewById(R.id.test_root_button);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-
-			}
-		});
 
 
 		final Spinner[] gpioSpinners = new Spinner[8];
@@ -184,7 +158,7 @@ public class SensorsFragment extends Fragment
 
 
 		final EditText sensorName = (EditText) root.findViewById(R.id.new_sensor_name);
-		button = (Button) root.findViewById(R.id.add_sensor);
+		Button button = (Button) root.findViewById(R.id.add_sensor);
 		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -267,10 +241,5 @@ public class SensorsFragment extends Fragment
 		catch (NullPointerException | IOException | ClassNotFoundException e){}
 
 		return root;
-	}
-
-	public void updateCurrentMode(Mode mode)
-	{
-		this.currentMode = mode;
 	}
 }
