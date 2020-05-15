@@ -13,18 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
 import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
 import com.smes.tinkerboard_gpio.GPIOPin;
 import com.smes.tinkerboard_gpio.sensors.KeyPad;
-import com.smes.tinkerboard_gpio.sensors.PressureSensor;
+import com.smes.tinkerboard_gpio.sensors.ButtonSensor;
 import com.smes.tinkerboard_gpio.sensors.Sensor;
 
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ public class SensorsFragment extends Fragment
 	private SensorsViewModel sensorsViewModel;
 	private GPIOPin pin185;
 	private KeyPad pad;
-	private PressureSensor press;
+	private ButtonSensor press;
 	private ArrayList<Sensor> sensors;
 
 	private Mode currentMode;
@@ -52,7 +49,7 @@ public class SensorsFragment extends Fragment
 		pad = new KeyPad("KP", 251, 255, 171, 163, 162, 184, 160, 161);
 		sensors.add(pad);
 
-		press = new PressureSensor("PS", 188);
+		press = new ButtonSensor("PS", 188);
 		sensors.add(press);
 
 
@@ -87,6 +84,29 @@ public class SensorsFragment extends Fragment
 			}
 		});
 
+
+		final Spinner[] gpioSpinners = new Spinner[8];
+		gpioSpinners[0] = (Spinner) root.findViewById(R.id.new_gpio_0);
+		gpioSpinners[1] = (Spinner) root.findViewById(R.id.new_gpio_1);
+		gpioSpinners[2] = (Spinner) root.findViewById(R.id.new_gpio_2);
+		gpioSpinners[3] = (Spinner) root.findViewById(R.id.new_gpio_3);
+		gpioSpinners[4] = (Spinner) root.findViewById(R.id.new_gpio_4);
+		gpioSpinners[5] = (Spinner) root.findViewById(R.id.new_gpio_5);
+		gpioSpinners[6] = (Spinner) root.findViewById(R.id.new_gpio_6);
+		gpioSpinners[7] = (Spinner) root.findViewById(R.id.new_gpio_7);
+
+		final String[][] gpioArrs = new String[8][];
+
+		final ArrayAdapter<String>[] gpioAdapters = new ArrayAdapter[8];
+		for(int i = 0; i < 8; i++)
+		{
+			gpioArrs[i] = getResources().getStringArray(R.array.gpio_pin_array);
+			gpioAdapters[i] = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, gpioArrs[i]);
+					//ArrayAdapter.createFromResource(this.getActivity(), R.array.gpio_pin_array, android.R.layout.simple_spinner_item);
+			gpioAdapters[i].setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+			gpioSpinners[i].setAdapter(gpioAdapters[i]);
+		}
+
 		final Spinner sensorSpinner = (Spinner) root.findViewById(R.id.sensor_spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.sensors_array, R.layout.support_simple_spinner_dropdown_item);
 		adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -100,7 +120,34 @@ public class SensorsFragment extends Fragment
 				{
 					case "KeyPad":
 
+						for(int i = 0; i < 8; i++)
+						{
+							gpioSpinners[i].setVisibility(View.VISIBLE);
+							gpioArrs[i][0] = ((i > 3) ? "C" : "R") + (i%4 + 1);
+							gpioAdapters[i].notifyDataSetChanged();
+						}
+
 						break;
+
+					case "Button":
+						gpioSpinners[0].setVisibility(View.VISIBLE);
+						gpioArrs[0][0] = "IN";
+						gpioAdapters[0].notifyDataSetChanged();
+
+						for(int i = 1; i < 8; i++)
+							gpioSpinners[i].setVisibility(View.INVISIBLE);
+
+					case "Pulse Oximeter":
+						gpioSpinners[0].setVisibility(View.VISIBLE);
+						gpioArrs[0][0] = "SCL";
+						gpioAdapters[0].notifyDataSetChanged();
+
+						gpioSpinners[1].setVisibility(View.VISIBLE);
+						gpioArrs[1][0] = "SDA";
+						gpioAdapters[1].notifyDataSetChanged();
+
+						for(int i = 2; i < 8; i++)
+							gpioSpinners[i].setVisibility(View.INVISIBLE);
 					default:
 
 
@@ -127,25 +174,69 @@ public class SensorsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				newSensorCard.setVisibility(View.INVISIBLE);
-
 				boolean sensorAdded = true;
+
+				for(int i = 0; i < 8; i++)
+					gpioSpinners[i].setBackgroundColor(getResources().getColor(R.color.clear));
+
 				switch ((String) sensorSpinner.getSelectedItem())
 				{
 					case "KeyPad":
-						sensors.add(new KeyPad(sensorName.getText().toString(), 1, 1, 1, 1, 1, 1, 1, 1));
+
+						for (int i = 0; i < 8; i++)
+						{
+							if (gpioSpinners[i].getSelectedItemPosition() == 0)
+							{
+								gpioSpinners[i].setBackgroundColor(getResources().getColor(R.color.badSelection));
+								sensorAdded = false;
+							}
+						}
+						if(sensorAdded)
+							sensors.add(new KeyPad(sensorName.getText().toString(),
+									Integer.parseInt((String) gpioSpinners[0].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[1].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[2].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[3].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[4].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[5].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[6].getSelectedItem()),
+									Integer.parseInt((String) gpioSpinners[7].getSelectedItem())));
 						break;
-					case "Pressure Sensor":
-						sensors.add(new PressureSensor(sensorName.getText().toString(), 1));
+
+					case "Button":
+						if (gpioSpinners[0].getSelectedItemPosition() > 0)
+						{
+							sensors.add(new ButtonSensor(sensorName.getText().toString(), 1));
+						}
+						else
+						{
+							sensorAdded = false;
+							gpioSpinners[0].setBackgroundColor(getResources().getColor(R.color.badSelection));
+						}
+						break;
+
+					case "Pulse Oximeter":
+						for (int i = 0; i < 2; i++)
+						{
+							if (gpioSpinners[i].getSelectedItemPosition() == 0)
+							{
+								gpioSpinners[i].setBackgroundColor(getResources().getColor(R.color.badSelection));
+								sensorAdded = false;
+							}
+						}
+						//if(sensorAdded)
+
 						break;
 					default:
 						sensorAdded = false;
 						break;
-
 				}
 
-				if(sensorAdded)
+				if (sensorAdded)
+				{
 					sensorAdapter.notifyItemInserted(sensors.size() - 1);
+					newSensorCard.setVisibility(View.INVISIBLE);
+				}
 			}
 		});
 

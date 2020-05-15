@@ -36,8 +36,8 @@
         android:id="@+id/mode_list"
         android:layout_width="173dp"
         android:layout_height="224dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -48,8 +48,8 @@
         android:layout_width="757dp"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="202dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"

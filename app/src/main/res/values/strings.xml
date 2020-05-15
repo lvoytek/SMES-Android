@@ -7,8 +7,40 @@
 
     <string-array name="sensors_array">
         <item>KeyPad</item>
-        <item>Pressure Sensor</item>
+        <item>Button</item>
         <item>Pulse Oximeter</item>
+    </string-array>
+
+    <string-array name="gpio_pin_array">
+        <item></item>
+        <item>252</item>
+        <item>253</item>
+        <item>17</item>
+        <item>164</item>
+        <item>166</item>
+        <item>167</item>
+        <item>257</item>
+        <item>256</item>
+        <item>254</item>
+        <item>233</item>
+        <item>165</item>
+        <item>168</item>
+        <item>238</item>
+        <item>185</item>
+        <item>224</item>
+        <item>161</item>
+        <item>160</item>
+        <item>184</item>
+        <item>162</item>
+        <item>163</item>
+        <item>171</item>
+        <item>255</item>
+        <item>251</item>
+        <item>234</item>
+        <item>239</item>
+        <item>223</item>
+        <item>187</item>
+        <item>188</item>
     </string-array>
 
 </resources>
