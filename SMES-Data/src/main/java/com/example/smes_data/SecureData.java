@@ -26,7 +26,7 @@ public class SecureData implements Serializable
 		this.dir = externalFilesDirectory;
 	}
 
-	public void writeData(String data) throws IOException
+	public void writeStringData(String data) throws IOException
 	{
 		FileWriter writer = new FileWriter(new File(dir, fileName));
 		writer.write(data);
@@ -48,7 +48,7 @@ public class SecureData implements Serializable
 		return obj;
 	}
 
-	public String readData() throws IOException
+	public String readStringData() throws IOException
 	{
 		FileReader reader = new FileReader(new File(dir, fileName));
 		char[] readData = new char[500];
@@ -62,4 +62,14 @@ public class SecureData implements Serializable
 	}
 
 	public String getFileName() { return this.fileName; }
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public void setFileName(String fileName)
+	{
+		this.fileName = fileName;
+	}
 }

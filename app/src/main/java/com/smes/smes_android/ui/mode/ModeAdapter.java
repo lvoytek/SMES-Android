@@ -113,13 +113,13 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 		this.vhMap.get(this.currentMode).select();
 	}
 
-	// allows clicks events to be caught
+	//Allows clicks events to be caught
 	void setClickListener(ItemClickListener itemClickListener)
 	{
 		this.mClickListener = itemClickListener;
 	}
 
-	// parent activity will implement this method to respond to click events
+	//Parent activity will implement this method to respond to click events
 	public interface ItemClickListener
 	{
 		void onItemClick(View view, int position);
