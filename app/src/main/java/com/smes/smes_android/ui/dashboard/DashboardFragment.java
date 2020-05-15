@@ -1,6 +1,7 @@
 package com.smes.smes_android.ui.dashboard;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,12 @@ import android.support.v4.app.Fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
+import com.example.smes_data.SecureData;
 import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
+
+import java.io.File;
+import java.io.IOException;
 
 public class DashboardFragment extends Fragment
 {
@@ -21,6 +26,7 @@ public class DashboardFragment extends Fragment
 	private DashboardViewModel dashboardViewModel;
 
 	private Mode currentMode;
+	private SecureData currentModeFile;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
@@ -44,6 +50,28 @@ public class DashboardFragment extends Fragment
 			public void onClick(View v) {
 				if(currentMode != null)
 					textView.setText(currentMode.toString());
+			}
+		});
+
+		try
+		{
+			File externalDir = getContext().getExternalFilesDir(null);
+			currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+			this.currentMode = (Mode) currentModeFile.readObjectData();
+		}
+		catch (NullPointerException | IOException | ClassNotFoundException e){}
+
+		getActivity().getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+			@Override
+			public void onBackStackChanged()
+			{
+				try
+				{
+					File externalDir = getContext().getExternalFilesDir(null);
+					currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+					currentMode = (Mode) currentModeFile.readObjectData();
+				}
+				catch (NullPointerException | IOException | ClassNotFoundException e){}
 			}
 		});
 

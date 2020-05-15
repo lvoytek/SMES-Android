@@ -2,6 +2,8 @@ package com.smes.smes_android.ui.sensors;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.arch.lifecycle.ViewModelProviders;
 
+import com.example.smes_data.SecureData;
 import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
 import com.smes.tinkerboard_gpio.GPIOPin;
@@ -25,6 +28,8 @@ import com.smes.tinkerboard_gpio.sensors.ButtonSensor;
 import com.smes.tinkerboard_gpio.sensors.PulseOximeter;
 import com.smes.tinkerboard_gpio.sensors.Sensor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SensorsFragment extends Fragment
@@ -35,6 +40,7 @@ public class SensorsFragment extends Fragment
 	private KeyPad pad;
 	private ButtonSensor press;
 	private ArrayList<Sensor> sensors;
+	private SecureData currentModeFile;
 
 	private Mode currentMode;
 
@@ -43,7 +49,7 @@ public class SensorsFragment extends Fragment
 
 		sensors = new ArrayList<Sensor>();
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
-		View root = inflater.inflate(R.layout.fragment_sensors, container, false);
+		final View root = inflater.inflate(R.layout.fragment_sensors, container, false);
 
 		pin185 = new GPIOPin(185);
 		pin185.setDirection(true);
@@ -69,10 +75,16 @@ public class SensorsFragment extends Fragment
 		});
 
 		FloatingActionButton floatButton = (FloatingActionButton) root.findViewById(R.id.new_item_button);
-		final CardView newSensorCard = ((CardView) root.findViewById(R.id.new_sensor_card));
+		final CardView newSensorCard = ((CardView) root.findViewById(R.id.item_card));
 		floatButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				newSensorCard.setVisibility(View.VISIBLE);
+				if(currentMode == null || currentMode.creatingSensorsOK())
+					newSensorCard.setVisibility(View.VISIBLE);
+				else
+				{
+					Snackbar.make(root, "Mode " + currentMode.toString() + " does not have sensor creation privileges", Snackbar.LENGTH_LONG)
+							.setAction("Action", null).show();
+				}
 			}
 		});
 
@@ -245,6 +257,14 @@ public class SensorsFragment extends Fragment
 				}
 			}
 		});
+
+		try
+		{
+			File externalDir = getContext().getExternalFilesDir(null);
+			currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+			this.currentMode = (Mode) currentModeFile.readObjectData();
+		}
+		catch (NullPointerException | IOException | ClassNotFoundException e){}
 
 		return root;
 	}

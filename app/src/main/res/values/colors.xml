@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="badSelection">#FF0000</color>
     <color name="clear">#FFFFFF</color>
+    <color name="deselected">#BBBBBB</color>
 </resources>

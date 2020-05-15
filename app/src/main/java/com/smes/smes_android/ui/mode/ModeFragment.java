@@ -2,9 +2,11 @@ package com.smes.smes_android.ui.mode;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ public class ModeFragment extends Fragment
 	private Mode currentMode;
 	private ArrayList<Mode> modes;
 	private SecureData currentModeFile;
+	private SecureData modesFile;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 							 ViewGroup container, Bundle savedInstanceState)
@@ -50,15 +53,36 @@ public class ModeFragment extends Fragment
 			}
 		});
 
-
-		modes = new ArrayList<>();
-		currentMode = new Mode("root", "Full Access", true, true, true, false);
-		modes.add(currentMode);
-
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
 			currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+			this.currentMode = (Mode) currentModeFile.readObjectData();
+		}
+		catch (NullPointerException | IOException | ClassNotFoundException e)
+		{
+			currentMode = new Mode("root", "Full Access", true, true, true, false);
+		}
+
+		try
+		{
+			File externalDir = getContext().getExternalFilesDir(null);
+			modesFile = new SecureData("Mode List", "all_modes.txt", externalDir);
+			this.modes = (ArrayList<Mode>) modesFile.readObjectData();
+			if(this.modes.size() == 0)
+				this.modes.add(this.currentMode);
+
+		} catch (IOException e)
+		{
+			modes = new ArrayList<>();
+			modes.add(currentMode);
+		} catch (ClassNotFoundException e) {}
+
+		try
+		{
+			File externalDir = getContext().getExternalFilesDir(null);
+			if(currentModeFile == null)
+				currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
 			currentModeFile.writeData(this.currentMode);
 		}
 		catch (NullPointerException | IOException e){}
@@ -66,18 +90,42 @@ public class ModeFragment extends Fragment
 
 		RecyclerView modeList = (RecyclerView) root.findViewById(R.id.mode_list);
 		modeList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		final ModeAdapter sensorAdapter = new ModeAdapter(modes);
-		modeList.setAdapter(sensorAdapter);
+		final ModeAdapter modeAdapter = new ModeAdapter(modes);
+		this.currentMode = modeAdapter.getModeFromName(this.currentMode.toString());
+		if(this.currentMode == null)
+			this.currentMode = modeAdapter.getModeAt(0);
 
-		Button button = (Button) root.findViewById(R.id.new_mode_button);
+		modeAdapter.setClickListener(new ModeAdapter.ItemClickListener()
+		{
+			@Override
+			public void onItemClick(View view, int position)
+			{
+				modeAdapter.selectModeAt(position);
+				Log.i("Click", "" + position);
+				currentMode = modeAdapter.getCurrentMode();
+
+				try
+				{
+					File externalDir = getContext().getExternalFilesDir(null);
+					if(currentModeFile == null)
+						currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
+					currentModeFile.writeData(currentMode);
+				}
+				catch (NullPointerException | IOException e){}
+			}
+		});
+		modeList.setAdapter(modeAdapter);
+		modeAdapter.setCurrentMode(this.currentMode);
+
+		FloatingActionButton fb = (FloatingActionButton) root.findViewById(R.id.new_mode_button);
 		final CardView newModeCard = (CardView) root.findViewById(R.id.new_mode_card);
-		button.setOnClickListener(new View.OnClickListener() {
+		fb.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				newModeCard.setVisibility(View.VISIBLE);
 			}
 		});
 
-		button = (Button) root.findViewById(R.id.create_mode_button);
+		Button button = (Button) root.findViewById(R.id.create_mode_button);
 		final EditText nameText = ((EditText) root.findViewById(R.id.new_mode_name));
 		final EditText modeSubtext = ((EditText) root.findViewById(R.id.new_mode_desc));
 		final Switch modeCrSwitch = (Switch) root.findViewById(R.id.is_mode_create);
@@ -92,8 +140,16 @@ public class ModeFragment extends Fragment
 
 				Mode newMode = new Mode(newModeName, newModeSubtext);
 				modes.add(newMode);
-				sensorAdapter.notifyItemInserted(modes.size() - 1);
+				modeAdapter.notifyItemInserted(modes.size() - 1);
 				newModeCard.setVisibility(View.INVISIBLE);
+
+				try
+				{
+					File externalDir = getContext().getExternalFilesDir(null);
+					if(modesFile == null)
+						modesFile = new SecureData("Mode List", "all_modes.txt", externalDir);
+					modesFile.writeData(modes);
+				} catch (IOException e){}
 			}
 		});
 
@@ -110,6 +166,4 @@ public class ModeFragment extends Fragment
 		}
 		catch (IOException e){}
 	}
-
-
 }
