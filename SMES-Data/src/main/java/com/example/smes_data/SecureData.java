@@ -10,7 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class SecureData
+public class SecureData implements Serializable
 {
 	protected String name;
 	protected String fileName;
