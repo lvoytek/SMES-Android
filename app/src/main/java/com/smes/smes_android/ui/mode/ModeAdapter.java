@@ -14,13 +14,16 @@ import com.smes.tinkerboard_gpio.sensors.Sensor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//Allows a list of modes to act as a RecyclerView list in a fragment
 public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder>
 {
+	//Contains the view item that each mode maps to
 	public class ModeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 	{
 		TextView name, sensorType;
 		CardView itemCard;
 
+		//Keep track of text for name and subtext, and card for background color
 		public ModeViewHolder(View itemView)
 		{
 			super(itemView);
@@ -30,16 +33,19 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 			itemView.setOnClickListener(this);
 		}
 
+		//Turn the background green to show that it is the active mode
 		public void select()
 		{
 			this.itemCard.setCardBackgroundColor(this.itemCard.getResources().getColor(R.color.colorAccent));
 		}
 
+		//Turn the background gray to show that it is no longer active
 		public void deselect()
 		{
 			this.itemCard.setCardBackgroundColor(this.itemCard.getResources().getColor(R.color.deselected));
 		}
 
+		//Notify listener that a click on this specific mode has happened
 		@Override
 		public void onClick(View view)
 		{
@@ -47,9 +53,16 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 		}
 	}
 
+	//The list of available mode
 	private ArrayList<Mode> mArrayModes;
+
+	//Map for each mode to its representative view
 	private HashMap<Mode, ModeViewHolder> vhMap;
+
+	//A copy of the currently active mode
 	private Mode currentMode;
+
+	//Listener for clicks on specific views
 	private ItemClickListener mClickListener;
 
 	public ModeAdapter(ArrayList<Mode> arrayModes)
@@ -64,6 +77,7 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 		return this.mArrayModes.size();
 	}
 
+	//Create view using list_item template
 	@Override
 	public ModeViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -71,6 +85,7 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 		return new ModeViewHolder(view);
 	}
 
+	//Bind a mode to its list view
 	@Override
 	public void onBindViewHolder(ModeViewHolder holder, int position)
 	{
@@ -90,21 +105,25 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 
 	}
 
+	//Get a copy of the mode in a specific location
 	public Mode getModeAt(int position)
 	{
 		return this.mArrayModes.get(position);
 	}
 
+	//Get the view for the mode at a specific position
 	public ModeViewHolder getModeVHAt(int position)
 	{
 		return this.vhMap.get(this.getModeAt(position));
 	}
 
+	//Get the view for the given mode
 	public ModeViewHolder getModeVHFromMode(Mode mode)
 	{
 		return this.vhMap.get(mode);
 	}
 
+	//Make the mode at a given position the active mode
 	public void selectModeAt(int position)
 	{
 		if(this.currentMode != null)
@@ -130,6 +149,7 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 		return this.currentMode;
 	}
 
+	//Set the current mode as the given mode
 	public void setCurrentMode(Mode mode)
 	{
 		int pos = this.mArrayModes.indexOf(mode);
@@ -138,6 +158,7 @@ public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ModeViewHolder
 			this.currentMode = mode;
 	}
 
+	//Get a copy of the mode that has the given name
 	public Mode getModeFromName(String modeName)
 	{
 		for(Mode m : this.mArrayModes)
