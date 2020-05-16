@@ -3,7 +3,6 @@ package com.smes.smes_android.ui.sensors;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import com.example.smes_data.SecureData;
 import com.example.smes_mode.Mode;
 import com.smes.smes_android.R;
-import com.smes.tinkerboard_gpio.GPIOPin;
 import com.smes.tinkerboard_gpio.sensors.KeyPad;
 import com.smes.tinkerboard_gpio.sensors.ButtonSensor;
 import com.smes.tinkerboard_gpio.sensors.PulseOximeter;
@@ -46,22 +44,30 @@ public class SensorsFragment extends Fragment
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 
+		//Create a new list of sensors
 		sensors = new ArrayList<Sensor>();
 		sensorsViewModel = ViewModelProviders.of(this).get(SensorsViewModel.class);
+
+		//Inflate the sensor fragment view to interact with ui elements
 		final View root = inflater.inflate(R.layout.fragment_sensors, container, false);
 
+		//Create an example keypad sensor using the given GPIO pins
 		pad = new KeyPad("KP", 251, 255, 171, 163, 162, 184, 160, 161);
 		sensors.add(pad);
 
+		//Create an example button
 		press = new ButtonSensor("PS", 188);
 		sensors.add(press);
 
+		//Press to open the new sensor dialogue if permitted
 		FloatingActionButton floatButton = (FloatingActionButton) root.findViewById(R.id.new_item_button);
 		final CardView newSensorCard = ((CardView) root.findViewById(R.id.item_card));
 		floatButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(currentMode == null || currentMode.creatingSensorsOK())
 					newSensorCard.setVisibility(View.VISIBLE);
+
+				//If mode does not have sensor creation privileges then block the dialogue and notify user
 				else
 				{
 					Snackbar.make(root, "Mode " + currentMode.toString() + " does not have sensor creation privileges", Snackbar.LENGTH_LONG)
@@ -71,7 +77,7 @@ public class SensorsFragment extends Fragment
 		});
 
 
-
+		//8 selection boxes for up to 8 GPIO pins when creating new sensors
 		final Spinner[] gpioSpinners = new Spinner[8];
 		gpioSpinners[0] = (Spinner) root.findViewById(R.id.new_gpio_0);
 		gpioSpinners[1] = (Spinner) root.findViewById(R.id.new_gpio_1);
@@ -84,20 +90,23 @@ public class SensorsFragment extends Fragment
 
 		final String[][] gpioArrs = new String[8][];
 
+		//Adapt the internal GPIO list to each spinner
 		final ArrayAdapter<String>[] gpioAdapters = new ArrayAdapter[8];
 		for(int i = 0; i < 8; i++)
 		{
 			gpioArrs[i] = getResources().getStringArray(R.array.gpio_pin_array);
 			gpioAdapters[i] = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, gpioArrs[i]);
-					//ArrayAdapter.createFromResource(this.getActivity(), R.array.gpio_pin_array, android.R.layout.simple_spinner_item);
 			gpioAdapters[i].setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 			gpioSpinners[i].setAdapter(gpioAdapters[i]);
 		}
 
+		//Sensor type selector
 		final Spinner sensorSpinner = (Spinner) root.findViewById(R.id.sensor_spinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.sensors_array, R.layout.support_simple_spinner_dropdown_item);
 		adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 		sensorSpinner.setAdapter(adapter);
+
+		//When a sensor type is selected set up the GPIO selectors to match its required pins
 		sensorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 		{
 			@Override
@@ -108,6 +117,7 @@ public class SensorsFragment extends Fragment
 
 				switch((String) parent.getItemAtPosition(position))
 				{
+					//KeyPad requires pins R1, R2, R3, R4, C1, C2, C3, and C4
 					case "KeyPad":
 
 						for(int i = 0; i < 8; i++)
@@ -119,6 +129,7 @@ public class SensorsFragment extends Fragment
 
 						break;
 
+					//Button requires 1 input pin
 					case "Button":
 						gpioSpinners[0].setVisibility(View.VISIBLE);
 						gpioArrs[0][0] = "IN";
@@ -127,6 +138,7 @@ public class SensorsFragment extends Fragment
 						for(int i = 1; i < 8; i++)
 							gpioSpinners[i].setVisibility(View.INVISIBLE);
 
+					//Pulse Oximeter requires I2C clock and data pins
 					case "Pulse Oximeter":
 						gpioSpinners[0].setVisibility(View.VISIBLE);
 						gpioArrs[0][0] = "SCL";
@@ -145,20 +157,20 @@ public class SensorsFragment extends Fragment
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent)
-			{
-
-			}
+			public void onNothingSelected(AdapterView<?> parent){ }
 		});
 
+		//The list of available sensors as a view
 		RecyclerView sensorList = (RecyclerView) root.findViewById(R.id.sensor_list);
 		sensorList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 		final SensorAdapter sensorAdapter = new SensorAdapter(sensors);
 		sensorList.setAdapter(sensorAdapter);
 
-
+		//Other new sensor dialogue items
 		final EditText sensorName = (EditText) root.findViewById(R.id.new_sensor_name);
 		Button button = (Button) root.findViewById(R.id.add_sensor);
+
+		//Attempt to create a new sensor when add button pressed
 		button.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -169,6 +181,7 @@ public class SensorsFragment extends Fragment
 				for(int i = 0; i < 8; i++)
 					gpioSpinners[i].setBackgroundColor(getResources().getColor(R.color.clear));
 
+				//Confirm all necessary pins are selected and if so create the sensor
 				switch ((String) sensorSpinner.getSelectedItem())
 				{
 					case "KeyPad":
@@ -224,6 +237,7 @@ public class SensorsFragment extends Fragment
 						break;
 				}
 
+				//If add succeeded then notify the adapter and save the list
 				if (sensorAdded)
 				{
 					sensorAdapter.notifyItemInserted(sensors.size() - 1);
@@ -232,6 +246,7 @@ public class SensorsFragment extends Fragment
 			}
 		});
 
+		//Get the global current mode from file if it is available
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
