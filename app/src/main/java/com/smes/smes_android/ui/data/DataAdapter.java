@@ -13,13 +13,16 @@ import com.smes.smes_android.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//Allows a list of SecureData entries to act as a formatted RecyclerView list
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder>
 {
+	//Holds the list entry view associated with a SecureData entry
 	public class DataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 	{
 		TextView name, location;
 		CardView itemCard;
 
+		//Keep track of the list_item card for coloring and the text items for setting viewable info
 		public DataViewHolder(View itemView)
 		{
 			super(itemView);
@@ -29,16 +32,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 			itemView.setOnClickListener(this);
 		}
 
+		//Turn a SecureData entry view green to show that it is the data entry being actively edited
 		public void select()
 		{
 			this.itemCard.setCardBackgroundColor(this.itemCard.getResources().getColor(R.color.colorAccent));
 		}
 
+		//Turn the SecureData entry view gray to show it is no longer active
 		public void deselect()
 		{
 			this.itemCard.setCardBackgroundColor(this.itemCard.getResources().getColor(R.color.deselected));
 		}
 
+		//Notify a designated click listener that this specific item has been clicked
 		@Override
 		public void onClick(View v)
 		{
@@ -46,9 +52,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 		}
 	}
 
+	//The array of secure data to be adapted into a view
 	private ArrayList<SecureData> dataArray;
+
+	//Maps each SecureData item with its view for editing specific item style
 	private HashMap<SecureData, DataViewHolder> vhMap;
+
+	//A copy of the currently active SecureData entry
 	private SecureData selectedSD;
+
+	//listener of clicks on specific items
 	private ItemClickListener mClickListener;
 
 	public DataAdapter(ArrayList<SecureData> arrayData)
@@ -63,6 +76,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 		return this.dataArray.size();
 	}
 
+	//Use the list_item view as a template for the SecureData entry view
 	@Override
 	public DataAdapter.DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -70,6 +84,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 		return new DataAdapter.DataViewHolder(view);
 	}
 
+	//Bind a specific SecureData entry with its view item
 	@Override
 	public void onBindViewHolder(DataAdapter.DataViewHolder holder, int position)
 	{
@@ -93,6 +108,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 		void onItemClick(View view, int position);
 	}
 
+	//Set the SecureData entry in a specific location as the active entry
 	public void selectDataAt(int position)
 	{
 		if(this.selectedSD != null)
@@ -103,6 +119,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 			this.vhMap.get(this.selectedSD).select();
 	}
 
+	//Get the currently selected SecureData entry
 	public SecureData getSelectedSD()
 	{
 		return this.selectedSD;
