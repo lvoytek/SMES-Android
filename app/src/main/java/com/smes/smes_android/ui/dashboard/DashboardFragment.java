@@ -49,7 +49,7 @@ public class DashboardFragment extends Fragment
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(currentMode != null)
-					textView.setText(currentMode.toString());
+					textView.setText("you have " + currentMode.toString() + " access!");
 			}
 		});
 

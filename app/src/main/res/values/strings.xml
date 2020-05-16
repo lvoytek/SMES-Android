@@ -4,6 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_data">Data</string>
     <string name="title_mode">Mode</string>
+    <string name="test_root">Test Root</string>
+    <string name="secure_middleware_for_embedded_systems">Secure Middleware for Embedded Systems</string>
 
     <string-array name="sensors_array">
         <item>KeyPad</item>

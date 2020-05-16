@@ -12,7 +12,7 @@ public class DashboardViewModel extends ViewModel
 	public DashboardViewModel()
 	{
 		mText = new MutableLiveData<>();
-		mText.setValue("This is dashboard fragment");
+		mText.setValue("You have not tested for root yet");
 	}
 
 	public LiveData<String> getText()
