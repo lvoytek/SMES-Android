@@ -43,20 +43,26 @@ public class ModeFragment extends Fragment
 	{
 		modeViewModel =
 				ViewModelProviders.of(this).get(com.smes.smes_android.ui.mode.ModeViewModel.class);
+
+		//Inflate the view of the Mode fragment to interact with view elements
 		final View root = inflater.inflate(R.layout.fragment_mode, container, false);
 
+		//Open up the current mode file if available and set the current mode
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
 			currentModeFile = new SecureData("Current Mode", "cmode.txt", externalDir);
 			this.currentMode = (Mode) currentModeFile.readObjectData();
 		}
+
+		//If no current mode file is available then create a root mode
 		catch (NullPointerException | IOException | ClassNotFoundException e)
 		{
 			currentModeFile = null;
 			currentMode = new Mode("root", "Full Access", true, true, true, false);
 		}
 
+		//Open up the mode list SecureData file if it is available and add listed modes to local
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
@@ -65,12 +71,17 @@ public class ModeFragment extends Fragment
 			if(this.modes.size() == 0)
 				this.modes.add(this.currentMode);
 
-		} catch (IOException e)
+		}
+
+		//If no list is available then create a new one and add the current mode to it
+		catch (IOException e)
 		{
 			modes = new ArrayList<>();
 			modes.add(currentMode);
 		} catch (ClassNotFoundException e) {}
 
+
+		//Write the current mode to the current mode file in case it has not yet been entered
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
@@ -81,6 +92,7 @@ public class ModeFragment extends Fragment
 		catch (NullPointerException | IOException e){}
 
 
+		//The view for the list of Modes and its adapter
 		RecyclerView modeList = (RecyclerView) root.findViewById(R.id.mode_list);
 		modeList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 		final ModeAdapter modeAdapter = new ModeAdapter(modes);
@@ -88,6 +100,7 @@ public class ModeFragment extends Fragment
 		if(this.currentMode == null)
 			this.currentMode = modeAdapter.getModeAt(0);
 
+		//If a mode is selected from the list then make it the active mode and save it to the current mode file
 		modeAdapter.setClickListener(new ModeAdapter.ItemClickListener()
 		{
 			@Override
@@ -108,14 +121,19 @@ public class ModeFragment extends Fragment
 			}
 		});
 		modeList.setAdapter(modeAdapter);
+
+		//Start with selected mode in adapter as the initially active mode
 		modeAdapter.setCurrentMode(this.currentMode);
 
+		//Open new mode creation dialogue when pressing the plus button
 		FloatingActionButton fb = (FloatingActionButton) root.findViewById(R.id.new_mode_button);
 		final CardView newModeCard = (CardView) root.findViewById(R.id.new_mode_card);
 		fb.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(currentMode.creatingModesOK())
 					newModeCard.setVisibility(View.VISIBLE);
+
+				//If the current mode cannot create new modes then block the card and notify user
 				else
 				{
 					Snackbar.make(root, "Mode " + currentMode.toString() + " does not have mode creation privileges", Snackbar.LENGTH_LONG)
@@ -125,6 +143,7 @@ public class ModeFragment extends Fragment
 			}
 		});
 
+		//New mode creation dialogue items
 		Button button = (Button) root.findViewById(R.id.create_mode_button);
 		final EditText nameText = ((EditText) root.findViewById(R.id.new_mode_name));
 		final EditText modeSubtext = ((EditText) root.findViewById(R.id.new_mode_desc));
@@ -132,6 +151,8 @@ public class ModeFragment extends Fragment
 		final Switch sensCrSwitch = (Switch) root.findViewById(R.id.is_sensor_create);
 		final Switch dataCrSwitch = (Switch) root.findViewById(R.id.is_data_create);
 		final Switch roCrSwitch = (Switch) root.findViewById(R.id.is_read_only);
+
+		//When clicked create a new mode based on the settings in the dialogue
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
@@ -155,15 +176,5 @@ public class ModeFragment extends Fragment
 
 
 		return root;
-	}
-
-
-	public void saveCurrentMode()
-	{
-		try
-		{
-			this.currentModeFile.writeData(this.currentMode);
-		}
-		catch (IOException e){}
 	}
 }
