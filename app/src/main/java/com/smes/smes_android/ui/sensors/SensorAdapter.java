@@ -11,8 +11,10 @@ import com.smes.tinkerboard_gpio.sensors.Sensor;
 
 import java.util.ArrayList;
 
+//Allows sensor items to be represented as views in a list
 public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorViewHolder>
 {
+	//Contains the view with visual sensor info
 	public class SensorViewHolder extends RecyclerView.ViewHolder
 	{
 		TextView name, sensorType;
@@ -25,6 +27,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 		}
 	}
 
+	//The list of sensors
 	private ArrayList<Sensor> mArraySensors;
 
 	public SensorAdapter(ArrayList<Sensor> arraySensors)
@@ -38,6 +41,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 		return this.mArraySensors.size();
 	}
 
+	//Use the list_item view as a template for visual sensor items
 	@Override
 	public SensorViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -45,6 +49,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 		return new SensorViewHolder(view);
 	}
 
+	//Bind a given sensor to a given item view
 	@Override
 	public void onBindViewHolder(SensorViewHolder holder, int position)
 	{
