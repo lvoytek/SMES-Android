@@ -42,6 +42,8 @@ public class DataFragment extends Fragment
 	{
 		dataViewModel =
 				ViewModelProviders.of(this).get(com.smes.smes_android.ui.data.DataViewModel.class);
+
+		//Inflate Secure Data view to interact with visual elements
 		final View root = inflater.inflate(R.layout.fragment_data, container, false);
 
 		//The pop-up cards for entering new data and viewing existing data
@@ -51,28 +53,34 @@ public class DataFragment extends Fragment
 		//Characters that are blocked in file name creation
 		final String reservedFileChars = "|\\?*<\":>+[]/'";
 
-		//Attempt to read the existing data from the filesystem if there is any
+		//Attempt to read the existing SecureData files from the filesystem if there is any
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
 			dataListFile = new SecureData("Data List", "all_data.txt", externalDir);
 			this.datas = (ArrayList<SecureData>) dataListFile.readObjectData();
 
-		} catch (IOException e)
+		}
+		//The SecureData file list has not yet been created so create a new one
+		catch (IOException e)
 		{
 			dataListFile = null;
 			datas = new ArrayList<>();
 		} catch (ClassNotFoundException e) {}
 
 
+		//Text components in the SecureData element and the update button
 		final EditText editDataName = (EditText) root.findViewById(R.id.edit_data_name);
 		final EditText editDataFileName = (EditText) root.findViewById(R.id.edit_data_filename);
 		final EditText editDataData = (EditText) root.findViewById(R.id.edit_data_input);
 		final Button updButton = (Button) root.findViewById(R.id.update_button);
 
+		//The top left list of SecureData files and the adapter for the list to be viewed
 		RecyclerView dataList = (RecyclerView) root.findViewById(R.id.data_list);
 		dataList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 		final DataAdapter dataAdapter = new DataAdapter(datas);
+
+		//When a data item is clicked, select it and open it in the editor
 		dataAdapter.setClickListener(new DataAdapter.ItemClickListener()
 		{
 			@Override
@@ -95,6 +103,7 @@ public class DataFragment extends Fragment
 					}
 					catch(IOException e){}
 
+					//Disable editing when the mode is read only
 					if(currentMode != null && currentMode.isReadOnly())
 					{
 						editDataName.setEnabled(false);
@@ -115,6 +124,7 @@ public class DataFragment extends Fragment
 		});
 		dataList.setAdapter(dataAdapter);
 
+		//Button to write edited SecureData to file, make sure constraints are followed before writing
 		updButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
@@ -131,18 +141,21 @@ public class DataFragment extends Fragment
 					String fileNameStr = editDataFileName.getText().toString();
 					String dataStr = editDataData.getText().toString();
 
+					//Name must not be empty, if it is turn its background red
 					if(nameStr.length() == 0)
 					{
 						editDataName.setBackgroundColor(getResources().getColor(R.color.badSelection));
 						editDataSuccess = false;
 					}
 
+					//Filename must not be empty
 					if(fileNameStr.length() == 0)
 					{
 						editDataFileName.setBackgroundColor(getResources().getColor(R.color.badSelection));
 						editDataSuccess = false;
 					}
 
+					//Confirm there are no reserved characters in the filename
 					if(editDataSuccess)
 					{
 						for(int i = 0; i < reservedFileChars.length(); i++)
@@ -156,6 +169,7 @@ public class DataFragment extends Fragment
 						}
 					}
 
+					//If all constraints are followed then attempt to write the data to the file
 					if(editDataSuccess)
 					{
 						try
@@ -167,6 +181,7 @@ public class DataFragment extends Fragment
 							editDataFileName.setBackgroundColor(getResources().getColor(R.color.badSelection));
 						}
 
+						//If write succeeds then modify the SecureData item in the list and write to list file
 						if(editDataSuccess)
 						{
 							dataAdapter.notifyDataSetChanged();
@@ -184,8 +199,7 @@ public class DataFragment extends Fragment
 			}
 		});
 
-
-
+		//Upon entering this fragment, attempt to get the current mode from the global mode file
 		try
 		{
 			File externalDir = getContext().getExternalFilesDir(null);
@@ -194,21 +208,27 @@ public class DataFragment extends Fragment
 		}
 		catch (NullPointerException | IOException | ClassNotFoundException e){}
 
+
+		//The text elements for entering a new SecureData object
 		final EditText dataName = (EditText) root.findViewById(R.id.new_data_name);
 		final EditText dataFileName = (EditText) root.findViewById(R.id.new_data_filename);
 		final EditText dataData = (EditText) root.findViewById(R.id.data_input);
 
+		//Open the new data dialogue when the bottom right plus button is pressed
 		FloatingActionButton floatButton = (FloatingActionButton) root.findViewById(R.id.new_data_button);
 		floatButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if(currentMode == null || currentMode.creatingDataOK())
 				{
+					//Clean up the new data dialogue card
 					editDataCard.setVisibility(View.INVISIBLE);
 					newDataCard.setVisibility(View.VISIBLE);
 					dataName.setText("Data Name");
 					dataFileName.setText("File Name");
 					dataData.setText("");
 				}
+
+				//If mode does not have data create access then block it from creating and notify user
 				else
 				{
 					Snackbar.make(root, "Mode " + currentMode.toString() + " does not have data creation privileges", Snackbar.LENGTH_LONG)
@@ -218,6 +238,7 @@ public class DataFragment extends Fragment
 		});
 
 
+		//Creates a new data entry when clicked as long as input is valid
 		Button button = (Button) root.findViewById(R.id.save_button);
 		button.setOnClickListener(new View.OnClickListener()
 		{
